@@ -33,8 +33,17 @@ def filedownload(df):
     return href
 
 # Model prediction
+# Model prediction
 def build_model(input_data, molecule_names):
-    model = pickle.load(open('acetylcholinesterase_model.pkl', 'rb'))
+    # Resolve path relative to this script
+    model_path = os.path.join(os.path.dirname(__file__), 'acetylcholinesterase_model.pkl')
+
+    # Check file presence
+    if not os.path.exists(model_path):
+        st.error(f"Model file not found at: {model_path}")
+        st.stop()
+
+    model = pickle.load(open(model_path, 'rb'))
     prediction = model.predict(input_data)
     st.header('**Prediction Output**')
     prediction_output = pd.Series(prediction, name='pIC50')
