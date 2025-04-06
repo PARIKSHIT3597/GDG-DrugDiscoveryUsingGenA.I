@@ -8,7 +8,6 @@ import pickle
 
 # Molecular descriptor calculator
 def desc_calc():
-    # Performs the descriptor calculation
     bashCommand = "java -Xms2G -Xmx2G -Djava.awt.headless=true -jar ./PaDEL-Descriptor/PaDEL-Descriptor.jar -removesalt -standardizenitro -fingerprints -descriptortypes ./PaDEL-Descriptor/PubchemFingerprinter.xml -dir ./ -file descriptors_output.csv"
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
@@ -22,13 +21,8 @@ def filedownload(df):
     return href
 
 # Model building
-
-
 def build_model(input_data):
-    import pickle
-
-    model_path = r"C:\Users\Parikshit\Desktop\Final Project for Hack 2 Skill\bioactivity-prediction-app-main\acetylcholinesterase_model.pkl"
-
+    model_path = os.path.join("models", "acetylcholinesterase_model.pkl")
     with open(model_path, "rb") as f:
         load_model = pickle.load(f)
 
@@ -41,17 +35,15 @@ def build_model(input_data):
     st.markdown(filedownload(df), unsafe_allow_html=True)
 
 # Logo image
-image = Image.open(r"C:\Users\Parikshit\Desktop\Final Project for Hack 2 Skill\bioactivity-prediction-app-main\logo.png")
-
+logo_path = os.path.join("assets", "logo.png")  # assuming logo.png is inside an "assets" folder
+image = Image.open(logo_path)
 st.image(image, use_column_width=True)
 
 # Page title
 st.markdown("""
 # Bioactivity Prediction App (Acetylcholinesterase)
 
-This app allows you to predict the bioactivity towards inhibting the `Acetylcholinesterase` enzyme. `Acetylcholinesterase` is a drug target for Alzheimer's disease.
-
-
+This app allows you to predict the bioactivity towards inhibiting the `Acetylcholinesterase` enzyme. `Acetylcholinesterase` is a drug target for Alzheimer's disease.
 """)
 
 # Sidebar
@@ -63,7 +55,7 @@ with st.sidebar.header('1. Upload your CSV data'):
 
 if st.sidebar.button('Predict'):
     load_data = pd.read_table(uploaded_file, sep=' ', header=None)
-    load_data.to_csv('molecule.smi', sep = '\t', header = False, index = False)
+    load_data.to_csv('molecule.smi', sep='\t', header=False, index=False)
 
     st.header('**Original input data**')
     st.write(load_data)
@@ -73,13 +65,14 @@ if st.sidebar.button('Predict'):
 
     # Read in calculated descriptors and display the dataframe
     st.header('**Calculated molecular descriptors**')
-    desc = pd.read_csv(r"C:\Users\Parikshit\Desktop\Final Project for Hack 2 Skill\bioactivity-prediction-app-main\descriptors_output.csv")
+    desc = pd.read_csv("descriptors_output.csv")
     st.write(desc)
     st.write(desc.shape)
 
     # Read descriptor list used in previously built model
     st.header('**Subset of descriptors from previously built models**')
-    Xlist = list(pd.read_csv(r"C:\Users\Parikshit\Desktop\Final Project for Hack 2 Skill\bioactivity-prediction-app-main\descriptor_list.csv").columns)
+    descriptor_list_path = os.path.join("models", "descriptor_list.csv")
+    Xlist = list(pd.read_csv(descriptor_list_path).columns)
     desc_subset = desc[Xlist]
     st.write(desc_subset)
     st.write(desc_subset.shape)
