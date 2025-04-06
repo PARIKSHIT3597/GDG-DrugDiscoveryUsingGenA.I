@@ -22,16 +22,10 @@ def filedownload(df):
     return href
 
 # Model building
-
-
 def build_model(input_data):
-    import pickle
-
-    model_path = r"C:\Users\Parikshit\Desktop\Final Project for Hack 2 Skill\bioactivity-prediction-app-main\acetylcholinesterase_model.pkl"
-
-    with open(model_path, "rb") as f:
-        load_model = pickle.load(f)
-
+    # Reads in saved regression model
+    load_model = pickle.load(open('acetylcholinesterase_model.pkl', 'rb'))
+    # Apply model to make predictions
     prediction = load_model.predict(input_data)
     st.header('**Prediction output**')
     prediction_output = pd.Series(prediction, name='pIC50')
@@ -41,7 +35,7 @@ def build_model(input_data):
     st.markdown(filedownload(df), unsafe_allow_html=True)
 
 # Logo image
-image = Image.open(r"C:\Users\Parikshit\Desktop\Final Project for Hack 2 Skill\bioactivity-prediction-app-main\logo.png")
+image = Image.open('logo.png')
 
 st.image(image, use_column_width=True)
 
@@ -51,7 +45,10 @@ st.markdown("""
 
 This app allows you to predict the bioactivity towards inhibting the `Acetylcholinesterase` enzyme. `Acetylcholinesterase` is a drug target for Alzheimer's disease.
 
-
+**Credits**
+- App built in `Python` + `Streamlit` by [Chanin Nantasenamat](https://medium.com/@chanin.nantasenamat) (aka [Data Professor](http://youtube.com/dataprofessor))
+- Descriptor calculated using [PaDEL-Descriptor](http://www.yapcwsoft.com/dd/padeldescriptor/) [[Read the Paper]](https://doi.org/10.1002/jcc.21707).
+---
 """)
 
 # Sidebar
@@ -73,13 +70,13 @@ if st.sidebar.button('Predict'):
 
     # Read in calculated descriptors and display the dataframe
     st.header('**Calculated molecular descriptors**')
-    desc = pd.read_csv(r"C:\Users\Parikshit\Desktop\Final Project for Hack 2 Skill\bioactivity-prediction-app-main\descriptors_output.csv")
+    desc = pd.read_csv('descriptors_output.csv')
     st.write(desc)
     st.write(desc.shape)
 
     # Read descriptor list used in previously built model
     st.header('**Subset of descriptors from previously built models**')
-    Xlist = list(pd.read_csv(r"C:\Users\Parikshit\Desktop\Final Project for Hack 2 Skill\bioactivity-prediction-app-main\descriptor_list.csv").columns)
+    Xlist = list(pd.read_csv('descriptor_list.csv').columns)
     desc_subset = desc[Xlist]
     st.write(desc_subset)
     st.write(desc_subset.shape)
