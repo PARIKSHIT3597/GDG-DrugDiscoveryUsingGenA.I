@@ -85,9 +85,15 @@ if st.sidebar.button('Predict'):
             st.write(desc)
             st.write(desc.shape)
 
+            # Subset descriptor logic
             st.header('**Subset of Descriptors Used in Model**')
-            Xlist = list(pd.read_csv('descriptor_list.csv').columns)
-            desc_subset = desc[Xlist]
+            try:
+                Xlist = list(pd.read_csv('descriptor_list.csv').columns)
+                desc_subset = desc[Xlist]
+            except FileNotFoundError:
+                st.warning("descriptor_list.csv not found. Using all descriptors.")
+                desc_subset = desc.drop('molecule_name', axis=1)
+
             st.write(desc_subset)
             st.write(desc_subset.shape)
 
