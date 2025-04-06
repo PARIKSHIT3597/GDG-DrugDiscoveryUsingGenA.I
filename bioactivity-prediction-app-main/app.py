@@ -34,16 +34,17 @@ def build_model(input_data):
     st.write(df)
     st.markdown(filedownload(df), unsafe_allow_html=True)
 
-# Logo image
-image = Image.open('logo.png')
-
+# Logo image (Cloud-safe)
+script_dir = os.path.dirname(os.path.abspath(__file__))
+logo_path = os.path.join(script_dir, "logo.png")
+image = Image.open(logo_path)
 st.image(image, use_column_width=True)
 
 # Page title
 st.markdown("""
 # Bioactivity Prediction App (Acetylcholinesterase)
 
-This app allows you to predict the bioactivity towards inhibting the `Acetylcholinesterase` enzyme. `Acetylcholinesterase` is a drug target for Alzheimer's disease.
+This app allows you to predict the bioactivity towards inhibiting the `Acetylcholinesterase` enzyme. `Acetylcholinesterase` is a drug target for Alzheimer's disease.
 
 **Credits**
 - App built in `Python` + `Streamlit` by [Chanin Nantasenamat](https://medium.com/@chanin.nantasenamat) (aka [Data Professor](http://youtube.com/dataprofessor))
@@ -60,7 +61,7 @@ with st.sidebar.header('1. Upload your CSV data'):
 
 if st.sidebar.button('Predict'):
     load_data = pd.read_table(uploaded_file, sep=' ', header=None)
-    load_data.to_csv('molecule.smi', sep = '\t', header = False, index = False)
+    load_data.to_csv('molecule.smi', sep='\t', header=False, index=False)
 
     st.header('**Original input data**')
     st.write(load_data)
