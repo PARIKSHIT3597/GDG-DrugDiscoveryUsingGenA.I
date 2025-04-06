@@ -35,7 +35,7 @@ def build_model(input_data):
     st.markdown(filedownload(df), unsafe_allow_html=True)
 
 # Logo image
-logo_path = os.path.join("assets", "logo.png")  # assuming logo.png is inside an "assets" folder
+logo_path = os.path.join("logo.png")  # assuming logo.png is inside an "assets" folder
 image = Image.open(logo_path)
 st.image(image, use_column_width=True)
 
